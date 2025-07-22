@@ -126,7 +126,7 @@ Follow these steps to get the Super Duper Mart application up and running on you
 ## Project Structure
 
 This project is organized as a monorepo:
-
+```bash
 superdupermart/
 ├── backend/        # Spring Boot backend application
 │   ├── src/
@@ -138,6 +138,7 @@ superdupermart/
 ├── package.json
 └── README.md   # Frontend-specific documentation
 
+```
 
 ## Backend API Documentation
 

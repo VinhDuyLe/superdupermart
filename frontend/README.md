@@ -32,7 +32,7 @@ Run `ng serve --open` for a dev server. Navigate to `http://localhost:4200/`. Th
 ## Project Structure
 
 The Angular application follows a modular structure:
-
+```bash
 src/app/
 ├── admin/          # Admin-specific components and routing
 │   ├── components/
@@ -55,6 +55,7 @@ src/app/
 ├── app-routing.module.ts # Main application routes
 ├── app.component.* # Root application component
 └── app.module.ts           # Root application module
+```
 
 ## Key Features Implemented
 
