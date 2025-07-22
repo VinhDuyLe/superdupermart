@@ -11,6 +11,8 @@ import org.vinhduyle.superdupermart.dto.UserResponse;
 import org.vinhduyle.superdupermart.service.UserService;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,16 +35,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@Valid @RequestBody LoginRequest request, BindingResult result) {
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginRequest request, BindingResult result) {
         if (result.hasErrors()) {
             throw new IllegalArgumentException("Validation error: Check username and password fields.");
         }
-        User user = userService.login(request);
-        return ResponseEntity.ok(UserResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .role(user.getRole().name())
-                .build());
+        String token = userService.loginAndGetToken(request);
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        return ResponseEntity.ok(response);
     }
+
 }

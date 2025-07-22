@@ -1,7 +1,7 @@
 package org.vinhduyle.superdupermart.service;
 
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.vinhduyle.superdupermart.dao.UserDao;
@@ -9,14 +9,16 @@ import org.vinhduyle.superdupermart.domain.User;
 import org.vinhduyle.superdupermart.dto.LoginRequest;
 import org.vinhduyle.superdupermart.dto.RegistrationRequest;
 import org.vinhduyle.superdupermart.exception.InvalidCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.vinhduyle.superdupermart.security.JWTUtil;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserDao userDao;
-
-//    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
+    private final JWTUtil jwtUtil;
 
     @Transactional
     public User registerUser(RegistrationRequest request) {
@@ -27,13 +29,13 @@ public class UserService {
             throw new IllegalArgumentException("Email already exists");
         }
 
-//        String hashedPassword = passwordEncoder.encode(request.getPassword());
+        String hashedPassword = passwordEncoder.encode(request.getPassword());
 
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .password(request.getPassword())  //hashedPassword
-                .role(User.Role.USER)  // Always USER for this flow
+                .password(hashedPassword)
+                .role(User.Role.USER)
                 .build();
 
         userDao.save(user);
@@ -41,14 +43,11 @@ public class UserService {
     }
 
     @Transactional
-    public User login(LoginRequest request) {
+    public String loginAndGetToken(LoginRequest request) {
         User user = userDao.findByUsername(request.getUsername());
-//        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-//            throw new InvalidCredentialsException("Incorrect credentials, please try again.");
-//        }
-        if (user == null || !request.getPassword().equals(user.getPassword())) {
+        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("Incorrect credentials, please try again.");
         }
-        return user;
+        return jwtUtil.generateToken(user);
     }
 }

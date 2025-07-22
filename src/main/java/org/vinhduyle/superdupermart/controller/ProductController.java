@@ -1,13 +1,15 @@
 package org.vinhduyle.superdupermart.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.vinhduyle.superdupermart.domain.Product;
 import org.vinhduyle.superdupermart.dto.ProductResponseDTO;
 import org.vinhduyle.superdupermart.service.OrderService;
 import org.vinhduyle.superdupermart.service.ProductService;
+import org.vinhduyle.superdupermart.security.CustomUserDetails; // Import CustomUserDetails
 
 import javax.validation.Valid;
 import java.util.List;
@@ -18,22 +20,39 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
     private final ProductService productService;
-    @Autowired
-    private final OrderService orderService;
+    private final OrderService orderService; // Keep if other methods use it
 
-    // For now we assume userId=1 (until authentication is implemented)
-    private static final Long TEST_USER_ID = 1L;
+    // Helper method to check if the current user is an ADMIN
+    private boolean isAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            return userDetails.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        }
+        return false;
+    }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ProductResponseDTO>> getAllInStockProducts() {
-        List<Product> products = productService.getAllInStockProducts();
-        List<ProductResponseDTO> dtos = products.stream()
-                .map(productService::toProductResponseDTO)
-                .collect(Collectors.toList());
+    public ResponseEntity<List<ProductResponseDTO>> getAllProductsForUsers() {
+        List<Product> products;
+        List<ProductResponseDTO> dtos;
+
+        if (isAdmin()) {
+            products = productService.getAllProducts(); // Get all products regardless of stock for admin view
+            dtos = products.stream()
+                    .map(productService::toProductResponseDTOForAdmin) // Use admin DTO conversion
+                    .collect(Collectors.toList());
+        } else {
+            products = productService.getAllInStockProducts(); // Only in-stock for regular users
+            dtos = products.stream()
+                    .map(productService::toProductResponseDTO) // Use regular DTO conversion
+                    .collect(Collectors.toList());
+        }
         return ResponseEntity.ok(dtos);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> getProductDetail(@PathVariable Long id) {
@@ -41,28 +60,43 @@ public class ProductController {
         if (product == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(productService.toProductResponseDTO(product));
+
+        if (isAdmin()) {
+            return ResponseEntity.ok(productService.toProductResponseDTOForAdmin(product));
+        } else {
+            return ResponseEntity.ok(productService.toProductResponseDTO(product));
+        }
     }
 
+    // Existing methods (no change, but ensure userId retrieval is consistent with CustomUserDetails)
     @GetMapping("/frequent/{x}")
     public ResponseEntity<List<ProductResponseDTO>> getMostFrequentlyPurchased(@PathVariable int x) {
-        List<Product> products = orderService.getMostFrequentlyPurchasedProducts(TEST_USER_ID, x);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getId();
+
+        List<Product> products = orderService.getMostFrequentlyPurchasedProducts(userId, x);
         List<ProductResponseDTO> dtos = products.stream()
-                .map(productService::toProductResponseDTO)
+                .map(productService::toProductResponseDTO) // Regular DTO conversion
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/recent/{x}")
     public ResponseEntity<List<ProductResponseDTO>> getMostRecentlyPurchased(@PathVariable int x) {
-        List<Product> products = orderService.getMostRecentlyPurchasedProducts(TEST_USER_ID, x);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getId();
+
+        List<Product> products = orderService.getMostRecentlyPurchasedProducts(userId, x);
         List<ProductResponseDTO> dtos = products.stream()
-                .map(productService::toProductResponseDTO)
+                .map(productService::toProductResponseDTO) // Regular DTO conversion
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
 
-    //ADMIN
+    // ADMIN endpoints (no change, as they already deal with Product objects directly)
+
     @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
         productService.createProduct(product);
@@ -75,7 +109,6 @@ public class ProductController {
         return ResponseEntity.ok(updated);
     }
 
-    //ADMIN
     @GetMapping("/popular/{x}")
     public ResponseEntity<List<Product>> getMostPopular(@PathVariable int x) {
         List<Product> products = orderService.getMostPopularProducts(x);

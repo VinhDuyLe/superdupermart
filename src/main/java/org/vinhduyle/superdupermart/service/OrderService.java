@@ -1,3 +1,4 @@
+// src/main/java/org/vinhduyle/superdupermart/service/OrderService.java
 package org.vinhduyle.superdupermart.service;
 
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.vinhduyle.superdupermart.dao.OrderDao;
 import org.vinhduyle.superdupermart.dao.OrderItemDao;
 import org.vinhduyle.superdupermart.dao.ProductDao;
 import org.vinhduyle.superdupermart.dao.UserDao;
+import org.springframework.security.access.AccessDeniedException; // Import Spring Security's AccessDeniedException
 import org.vinhduyle.superdupermart.domain.Order;
 import org.vinhduyle.superdupermart.domain.OrderItem;
 import org.vinhduyle.superdupermart.domain.Product;
@@ -47,11 +49,7 @@ public class OrderService {
         for (OrderItemRequest itemReq : orderItems) {
             Product product = productDao.findById(itemReq.getProductId());
             if (product == null) continue;
-            /*
-○ The user should be able to purchase multiple different items within a single order.
-○ If the quantity of an item that the user is purchasing is greater than the item’s stock, throw a
-custom exception named NotEnoughInventoryException using Exception Handler and the order should not be placed.
-            */
+
             if (product.getQuantity() < itemReq.getQuantity()) {
                 throw new NotEnoughInventoryException("Not enough inventory for product: " + product.getName());
             }
@@ -76,12 +74,23 @@ custom exception named NotEnoughInventoryException using Exception Handler and t
     }
 
     @Transactional
-    public void cancelOrder(Long orderId) {
+    public void cancelOrder(Long orderId, Long requestingUserId) {
         Order order = orderDao.findById(orderId);
-        //The user should be able to cancel an order by updating the status from Processing to Canceled.
-        //However, a “Completed” order cannot be changed to “Canceled”.
         if (order == null || order.getStatus() != Order.Status.PROCESSING) {
-            throw new IllegalArgumentException("Cannot cancel this order");
+            throw new IllegalArgumentException("Cannot cancel this order: Order not found or not in PROCESSING status.");
+        }
+
+        User requestingUser = userDao.findById(requestingUserId);
+        if (requestingUser == null) {
+            throw new IllegalArgumentException("Requesting user not found.");
+        }
+
+        // Use .getRole().name() to compare with String literal
+        boolean isAdmin = requestingUser.getRole().name().equals("ADMIN");
+
+        if (!isAdmin && !order.getUser().getId().equals(requestingUserId)) {
+            // Throw Spring Security's AccessDeniedException
+            throw new AccessDeniedException("User not authorized to cancel this order.");
         }
 
         for (OrderItem item : order.getItems()) {
@@ -100,8 +109,14 @@ custom exception named NotEnoughInventoryException using Exception Handler and t
         if (user == null) throw new IllegalArgumentException("User not found");
 
         List<Order> orders = orderDao.findOrdersByUser(userId);
-        // Initialize items
-        orders.forEach(o -> o.getItems().size());
+        orders.forEach(o -> o.getItems().size()); // Initialize items
+        return orders;
+    }
+
+    @Transactional
+    public List<Order> getAllOrders() {
+        List<Order> orders = orderDao.getAll();
+        orders.forEach(o -> o.getItems().size()); // Initialize items
         return orders;
     }
 
@@ -109,8 +124,7 @@ custom exception named NotEnoughInventoryException using Exception Handler and t
     public Order getOrderById(Long orderId) {
         Order order = orderDao.findById(orderId);
         if (order != null) {
-            // Ensure items are initialized before leaving transactional boundary
-            order.getItems().size();
+            order.getItems().size(); // Ensure items are initialized
         }
         return order;
     }
@@ -119,14 +133,6 @@ custom exception named NotEnoughInventoryException using Exception Handler and t
     @Transactional
     public void completeOrder(Long orderId) {
         Order order = orderDao.findById(orderId);
-        /*
-(PATCH) The seller should also be able to cancel an order
-○ for some reasons, such as that the product is sold out locally, by updating the order status to
-“Canceled”.
-○ If so, [the item’s stock should be incremented accordingly] to offset the auto-deduction that took
-place when the order is first placed.
-○ However, a “Canceled” order cannot be completed, nor can a “Completed” order be canceled.
-        * */
         if (order == null || order.getStatus() != Order.Status.PROCESSING) {
             throw new IllegalArgumentException("Cannot complete this order");
         }
@@ -166,5 +172,10 @@ place when the order is first placed.
                 .collect(Collectors.toList());
     }
 
-
+    @Transactional
+    public List<Order> getAllOrdersPaged(int page, int size) {
+        List<Order> orders = orderDao.findOrdersPaged(page, size);
+        orders.forEach(o -> o.getItems().size()); // Ensure items initialized
+        return orders;
+    }
 }

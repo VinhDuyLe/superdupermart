@@ -81,5 +81,16 @@ public class OrderDao extends AbstractHibernateDao<Order> {
         query.setMaxResults(limit);
         return query.getResultList();
     }
+    public List<Order> findOrdersPaged(int page, int size) {
+        Session session = getCurrentSession();
+        Query<Order> query = session.createQuery(
+                "FROM Order o ORDER BY o.createdAt DESC",
+                Order.class
+        );
+        query.setFirstResult(page * size);
+        query.setMaxResults(size);
+        return query.getResultList();
+    }
+
 
 }

@@ -11,6 +11,7 @@ import org.vinhduyle.superdupermart.domain.Product;
 import org.vinhduyle.superdupermart.dto.ProductResponseDTO;
 
 import java.util.List;
+import java.util.stream.Collectors; // Added import
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,7 @@ public class ProductService {
     public Product getProductById(Long id) {
         return productDao.findById(id);
     }
+
     // ADMIN ROLE
     @Transactional
     public Product createProduct(Product product) {
@@ -60,14 +62,27 @@ public class ProductService {
         return product;
     }
 
+    // This version is for general users - hides wholesale price
     public ProductResponseDTO toProductResponseDTO(Product product) {
         return ProductResponseDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .retailPrice(product.getRetailPrice())
-                .quantity(product.getQuantity())
+                .quantity(null)
+                .wholesalePrice(null) // Explicitly set to null for regular users
                 .build();
     }
 
+    // This version is for ADMINs - includes wholesale price
+    public ProductResponseDTO toProductResponseDTOForAdmin(Product product) {
+        return ProductResponseDTO.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .retailPrice(product.getRetailPrice())
+                .quantity(product.getQuantity())
+                .wholesalePrice(product.getWholesalePrice()) // Include wholesale price for admin
+                .build();
+    }
 }
