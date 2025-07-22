@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import java.util.stream.Collectors;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,5 +33,29 @@ public class GlobalExceptionHandler {
         body.put("error", "Access denied");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
     }
+
+    @ExceptionHandler(NotEnoughInventoryException.class)
+    public ResponseEntity<Map<String, String>> handleNotEnoughInventory(NotEnoughInventoryException ex) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", ex.getMessage());
+        // 409 Conflict could be used to indicate a conflict with current state of resource
+        // 422 Unprocessable Entity for semantic errors
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body); // Or HttpStatus.UNPROCESSABLE_ENTITY
+    }
+    // Example addition to GlobalExceptionHandler
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .collect(Collectors.toMap(
+                        fieldError -> fieldError.getField(),
+                        fieldError -> fieldError.getDefaultMessage() != null ? fieldError.getDefaultMessage() : "Invalid value"
+                ));
+        // You can return a 400 Bad Request for validation errors
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
 
 }
