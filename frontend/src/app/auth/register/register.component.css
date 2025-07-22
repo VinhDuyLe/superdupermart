@@ -1,0 +1,20 @@
+/* superdupermart/frontend/src/app/auth/register/register.component.css */
+/* You can reuse the styles from login.component.css here, or define unique ones. */
+/* Example: */
+.auth-card {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  text-align: center;
+}
+mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+button {
+  margin-top: 10px;
+}
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+}

@@ -4,6 +4,8 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import org.vinhduyle.superdupermart.domain.Order;
+import org.hibernate.Criteria; // Import Criteria if not already present
+import org.hibernate.criterion.Projections; // For counting
 
 import java.util.List;
 
@@ -90,6 +92,33 @@ public class OrderDao extends AbstractHibernateDao<Order> {
         query.setFirstResult(page * size);
         query.setMaxResults(size);
         return query.getResultList();
+    }
+
+    // New method to get total count of orders
+    public long getTotalOrderCount() {
+        Session session = getCurrentSession();
+        // Using HQL for count
+        Long count = session.createQuery("SELECT COUNT(o) FROM Order o", Long.class)
+                .uniqueResult();
+        return count != null ? count : 0;
+        /*
+        // Alternatively, using Criteria for count as required by backend (at least one DAO method with Criteria):
+        // This method would satisfy the Criteria requirement if you didn't have one elsewhere.
+        Criteria criteria = session.createCriteria(clazz); // clazz is 'Order.class' from AbstractHibernateDao
+        criteria.setProjection(Projections.rowCount());
+        Long count = (Long) criteria.uniqueResult();
+        return count != null ? count : 0;
+        */
+    }
+
+    // New method to get the total count of sold items from COMPLETED orders
+    public long getTotalSoldItemCount() {
+        Session session = getCurrentSession();
+        Long count = session.createQuery(
+                "SELECT SUM(oi.quantity) FROM OrderItem oi WHERE oi.order.status = 'COMPLETED'",
+                Long.class
+        ).uniqueResult();
+        return count != null ? count : 0;
     }
 
 

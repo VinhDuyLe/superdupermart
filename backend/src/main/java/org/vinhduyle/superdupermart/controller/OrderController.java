@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.vinhduyle.superdupermart.domain.Order;
 import org.vinhduyle.superdupermart.dto.OrderRequest;
+import org.vinhduyle.superdupermart.dto.PagedResponse;
 import org.vinhduyle.superdupermart.security.CustomUserDetails; // Import your CustomUserDetails
 import org.vinhduyle.superdupermart.service.OrderService;
 
@@ -86,10 +87,18 @@ public class OrderController {
         return ResponseEntity.noContent().build();
     }
 
+    // Modified getAllOrdersPaged to return PagedResponse
     @GetMapping("/admin")
-    public ResponseEntity<List<Order>> getAllOrdersPaged(@RequestParam(defaultValue = "0") int page) {
-        // This endpoint remains restricted to ADMIN by SecurityConfig
-        List<Order> orders = orderService.getAllOrdersPaged(page, 5);
+    public ResponseEntity<PagedResponse<Order>> getAllOrdersPaged(@RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "5") int size) { // Added size parameter
+        PagedResponse<Order> orders = orderService.getAllOrdersPaged(page, size);
         return ResponseEntity.ok(orders);
+    }
+
+    // New endpoint for total sold items (Admin only)
+    @GetMapping("/admin/total-sold-items")
+    public ResponseEntity<Long> getTotalSoldItems() {
+        long totalSold = orderService.getTotalSoldItemsCount();
+        return ResponseEntity.ok(totalSold);
     }
 }

@@ -1,0 +1,30 @@
+<!-- superdupermart/frontend/src/app/shared/components/product-detail/product-detail.component.html -->
+<mat-card class="product-detail-card">
+  <mat-card-title>Product Details</mat-card-title>
+  <mat-card-content>
+    <div *ngIf="product; else loadingOrError">
+      <p><strong>ID:</strong> {{ product.id }}</p>
+      <p><strong>Name:</strong> {{ product.name }}</p>
+      <p><strong>Description:</strong> {{ product.description }}</p>
+      <p><strong>Retail Price:</strong> {{ product.retailPrice | currency }}</p>
+
+      <ng-container *ngIf="isAdmin()">
+        <p><strong>Wholesale Price:</strong> {{ product.wholesalePrice | currency }}</p>
+        <p><strong>Quantity in Stock:</strong> {{ product.quantity }}</p>
+      </ng-container>
+
+      <div class="product-actions">
+        <button mat-raised-button color="primary" (click)="addToCart(product)" matTooltip="Add to Cart" *ngIf="!isAdmin()">
+          <mat-icon>add_shopping_cart</mat-icon> Add to Cart
+        </button>
+        <button mat-raised-button color="accent" (click)="backToList()">Back to Products</button>
+      </div>
+    </div>
+
+    <ng-template #loadingOrError>
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <p *ngIf="!isLoading && !product && !errorMessage">Product not found.</p>
+    </ng-template>
+  </mat-card-content>
+</mat-card>

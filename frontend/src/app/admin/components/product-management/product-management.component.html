@@ -1,0 +1,65 @@
+<!-- superdupermart/frontend/src/app/admin/components/product-management/product-management.component.html -->
+<mat-card>
+  <mat-card-title>Product Management</mat-card-title>
+  <mat-card-content>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" routerLink="/admin/products/add">Add New Product</button>
+    </div>
+
+    <div class="table-container">
+      <table mat-table [dataSource]="products" matSort class="mat-elevation-z8">
+
+        <!-- Product ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+          <td mat-cell *matCellDef="let product"> {{ product.id }} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+          <td mat-cell *matCellDef="let product"> {{ product.name }} </td>
+        </ng-container>
+
+        <!-- Retail Price Column -->
+        <ng-container matColumnDef="retailPrice">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Retail Price </th>
+          <td mat-cell *matCellDef="let product"> {{ product.retailPrice | currency }} </td>
+        </ng-container>
+
+        <!-- Wholesale Price Column -->
+        <ng-container matColumnDef="wholesalePrice">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Wholesale Price </th>
+          <td mat-cell *matCellDef="let product"> {{ product.wholesalePrice | currency }} </td>
+        </ng-container>
+
+        <!-- Quantity Column -->
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
+          <td mat-cell *matCellDef="let product"> {{ product.quantity }} </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let product">
+            <button mat-icon-button color="primary" (click)="viewProductDetail(product.id)" matTooltip="View Details">
+              <mat-icon>info</mat-icon>
+            </button>
+            <button mat-icon-button color="accent" (click)="editProduct(product.id)" matTooltip="Edit Product">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+    </div>
+
+    <p *ngIf="products.data.length === 0 && !isLoading">No products to manage.</p>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+  </mat-card-content>
+</mat-card>

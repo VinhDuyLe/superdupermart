@@ -1,0 +1,38 @@
+<mat-toolbar color="primary">
+  <span>Super Duper Mart</span>
+  <span class="spacer"></span>
+  <ng-container *ngIf="isLoggedIn()">
+    <ng-container *ngIf="!isAdmin()">
+      <button mat-button routerLink="/user/products">Products</button>
+      <button mat-button routerLink="/user/orders">My Orders</button>
+      <button mat-button routerLink="/user/watchlist/products/all">Watchlist</button>
+      <button mat-button routerLink="/user/home">User Home</button>
+      <button mat-button routerLink="/user/cart">Cart</button>
+    </ng-container>
+
+    <ng-container *ngIf="isAdmin()">
+      <button mat-button routerLink="/admin/home">Admin Dashboard</button>
+      <button mat-button routerLink="/admin/products">Product Mgmt</button>
+      <button mat-button routerLink="/admin/orders">Order Mgmt</button>
+    </ng-container>
+
+    <button mat-button (click)="logout()">Logout</button>
+  </ng-container>
+  <ng-container *ngIf="!isLoggedIn()">
+    <button mat-button routerLink="/login">Login</button>
+    <button mat-button routerLink="/register">Register</button>
+  </ng-container>
+</mat-toolbar>
+
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>
+
+<style>
+  .spacer {
+    flex: 1 1 auto;
+  }
+  .main-content {
+    padding: 20px;
+  }
+</style>

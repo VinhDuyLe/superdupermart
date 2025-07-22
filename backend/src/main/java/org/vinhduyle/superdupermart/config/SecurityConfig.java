@@ -3,6 +3,7 @@ package org.vinhduyle.superdupermart.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod; // Import HttpMethod
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,18 +25,41 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
+                // IMPORTANT: Ensure CORS is handled by Spring Security before authorization
+                // This allows the CorsConfig to take effect for preflight requests
+                .cors() // <--- ADD THIS LINE TO ENABLE CORS INTEGRATION WITH SPRING SECURITY
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/signup", "/login", "/products/all", "/products/{id}").permitAll()
-                .antMatchers("/products/frequent/{id}", "/products/recent/{id}").authenticated() // Authenticated users for their frequent/recent
-                .antMatchers("/orders/all").authenticated() // All authenticated users can access their orders or all orders if admin
-                .antMatchers("/orders/{id}").authenticated() // Authenticated users can view specific order details
+                // Permit preflight OPTIONS requests for all paths.
+                // Browsers send OPTIONS before actual cross-origin requests (POST, PUT, PATCH, DELETE, or requests with custom headers like Authorization).
+                // If this is blocked, the actual request won't even be sent.
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() // <--- ADD THIS LINE
+
+                // Public endpoints (no authentication required)
+                .antMatchers("/signup", "/login").permitAll()
+
+                // Authenticated endpoints (require a valid JWT token)
+                // This is where /products/all and /products/{id} should be
+                .antMatchers("/products/all", "/products/{id}").authenticated() // <-- NOW THIS IS CORRECTLY AUTHENTICATED
+                .antMatchers("/products/frequent/{id}", "/products/recent/{id}").authenticated()
+                .antMatchers("/orders/all").authenticated()
+                .antMatchers("/orders/{id}").authenticated()
+                .antMatchers("/orders", "/orders/**").authenticated() // Ensure all /orders routes are authenticated unless specified
+                .antMatchers("PATCH", "/orders/*/cancel").authenticated()
+
+
+                // Admin-only endpoints (require ADMIN role)
                 .antMatchers("/orders/admin", "/products/popular/**", "/products/profit/**").hasRole("ADMIN")
-                .antMatchers("POST", "/products").hasRole("ADMIN")
-                .antMatchers("PATCH", "/products/**").hasRole("ADMIN")
-                .antMatchers("PATCH", "/orders/*/complete").hasRole("ADMIN")
-                .antMatchers("PATCH", "/orders/*/cancel").authenticated() // Users can cancel their own orders
+                .antMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/products/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/orders/*/complete").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/orders/admin/total-sold-items").hasRole("ADMIN") // <--- ADD THIS LINE
+
+
+
+                // Any other request must also be authenticated by default
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

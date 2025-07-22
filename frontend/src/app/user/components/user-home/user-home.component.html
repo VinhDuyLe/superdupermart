@@ -1,0 +1,59 @@
+<!-- superdupermart/frontend/src/app/user/components/user-home/user-home.component.html -->
+<div class="user-home-container">
+  <mat-card class="welcome-card">
+    <mat-card-title>Welcome to Super Duper Mart!</mat-card-title>
+    <mat-card-content>
+      <p>Explore our products, manage your orders, and keep an eye on your watchlist.</p>
+      <p>Your shopping journey starts here.</p>
+      <button mat-raised-button color="primary" routerLink="/user/products">Shop Now</button>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="stats-section">
+    <mat-card class="stat-card">
+      <mat-card-title>Most Frequently Purchased</mat-card-title>
+      <mat-card-content>
+        <div *ngIf="frequentProducts.length > 0; else noFrequentProducts">
+          <mat-list>
+            <mat-list-item *ngFor="let product of frequentProducts">
+              <mat-icon matListItemIcon>star</mat-icon>
+              <div matListItemTitle>{{ product.name }}</div>
+              <div matListItemLine>{{ product.retailPrice | currency }}</div>
+              <button mat-icon-button (click)="viewProductDetail(product.id)" matTooltip="View Details">
+                <mat-icon>info</mat-icon>
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </div>
+        <ng-template #noFrequentProducts>
+          <p>No frequently purchased items yet.</p>
+        </ng-template>
+      </mat-card-content>
+      <mat-spinner *ngIf="isLoadingFrequent" diameter="20"></mat-spinner>
+      <p class="error-message" *ngIf="errorMessageFrequent">{{ errorMessageFrequent }}</p>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-title>Most Recently Purchased</mat-card-title>
+      <mat-card-content>
+        <div *ngIf="recentProducts.length > 0; else noRecentProducts">
+          <mat-list>
+            <mat-list-item *ngFor="let product of recentProducts">
+              <mat-icon matListItemIcon>history</mat-icon>
+              <div matListItemTitle>{{ product.name }}</div>
+              <div matListItemLine>{{ product.retailPrice | currency }}</div>
+              <button mat-icon-button (click)="viewProductDetail(product.id)" matTooltip="View Details">
+                <mat-icon>info</mat-icon>
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </div>
+        <ng-template #noRecentProducts>
+          <p>No recently purchased items yet.</p>
+        </ng-template>
+      </mat-card-content>
+      <mat-spinner *ngIf="isLoadingRecent" diameter="20"></mat-spinner>
+      <p class="error-message" *ngIf="errorMessageRecent">{{ errorMessageRecent }}</p>
+    </mat-card>
+  </div>
+</div>

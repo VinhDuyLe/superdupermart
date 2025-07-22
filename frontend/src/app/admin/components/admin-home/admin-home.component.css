@@ -1,0 +1,83 @@
+/* superdupermart/frontend/src/app/admin/components/admin-home/admin-home.component.css */
+.admin-home-container {
+  padding: 20px;
+}
+
+.welcome-card {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  padding: 15px;
+}
+
+mat-list {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+mat-list-item {
+  height: auto !important;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+mat-list-item:last-child {
+  border-bottom: none;
+}
+
+mat-list-item .mat-list-item-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+mat-list-item .mat-list-item-content > * {
+  flex-shrink: 0;
+}
+
+mat-list-item .mat-list-item-content .mat-icon {
+  margin-right: 10px;
+}
+
+mat-list-item .mat-list-item-content [matListItemTitle] {
+  flex-grow: 1;
+  font-weight: bold;
+}
+
+mat-list-item .mat-list-item-content [matListItemLine] {
+  margin-left: 10px;
+  color: #757575;
+}
+
+.orders-preview-card {
+  margin-top: 20px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 600px;
+}
+
+mat-spinner {
+  margin: 10px auto;
+  display: block;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}

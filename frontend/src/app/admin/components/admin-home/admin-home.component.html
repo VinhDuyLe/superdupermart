@@ -1,0 +1,123 @@
+<div class="admin-home-container">
+  <mat-card class="welcome-card">
+    <mat-card-title>Admin Dashboard</mat-card-title>
+    <mat-card-content>
+      <p>Manage products, orders, and view key business statistics.</p>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-title>Top 3 Most Popular Products</mat-card-title>
+      <mat-card-content>
+        <div *ngIf="popularProducts.length > 0; else noPopularProducts">
+          <mat-list>
+            <mat-list-item *ngFor="let product of popularProducts">
+              <mat-icon matListItemIcon>star</mat-icon>
+              <div matListItemTitle>{{ product.name }}</div>
+              <div matListItemLine>{{ product.retailPrice | currency }}</div>
+              <button mat-icon-button (click)="viewProductDetail(product.id)" matTooltip="View Details">
+                <mat-icon>info</mat-icon>
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </div>
+        <ng-template #noPopularProducts>
+          <p>No popular products data available.</p>
+        </ng-template>
+      </mat-card-content>
+      <mat-spinner *ngIf="isLoadingPopular" diameter="20"></mat-spinner>
+      <p class="error-message" *ngIf="errorMessagePopular">{{ errorMessagePopular }}</p>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-title>Top 3 Most Profitable Products</mat-card-title>
+      <mat-card-content>
+        <div *ngIf="profitableProducts.length > 0; else noProfitableProducts">
+          <mat-list>
+            <mat-list-item *ngFor="let product of profitableProducts">
+              <mat-icon matListItemIcon>attach_money</mat-icon>
+              <div matListItemTitle>{{ product.name }}</div>
+              <div matListItemLine>Profit: {{ product.wholesalePrice | currency }}</div>
+              <button mat-icon-button (click)="viewProductDetail(product.id)" matTooltip="View Details">
+                <mat-icon>info</mat-icon>
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </div>
+        <ng-template #noProfitableProducts>
+          <p>No profitable products data available.</p>
+        </ng-template>
+      </mat-card-content>
+      <mat-spinner *ngIf="isLoadingProfitable" diameter="20"></mat-spinner>
+      <p class="error-message" *ngIf="errorMessageProfitable">{{ errorMessageProfitable }}</p>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-title>Total Items Sold</mat-card-title>
+      <mat-card-content>
+        <p *ngIf="totalSoldItems !== null; else loadingTotalSold">
+          <strong>{{ totalSoldItems }}</strong> items have been successfully sold.
+        </p>
+        <ng-template #loadingTotalSold>
+          <mat-spinner *ngIf="isLoadingTotalSold" diameter="20"></mat-spinner>
+          <p *ngIf="!isLoadingTotalSold && totalSoldItems === null">Data not available.</p>
+        </ng-template>
+        <p class="error-message" *ngIf="errorMessageTotalSold">{{ errorMessageTotalSold }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-card class="orders-preview-card">
+    <mat-card-title>Recent Orders</mat-card-title>
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="orders" class="mat-elevation-z8">
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> ID </th>
+            <td mat-cell *matCellDef="let order"> {{ order.id }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="customer">
+            <th mat-header-cell *matHeaderCellDef> Customer </th>
+            <td mat-cell *matCellDef="let order"> {{ order.user.username }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let order"> {{ order.status }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef> Date </th>
+            <td mat-cell *matCellDef="let order"> {{ order.createdAt | date:'short' }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let order">
+              <button mat-icon-button color="primary" (click)="viewOrderDetail(order.id)" matTooltip="View Details">
+                <mat-icon>info</mat-icon>
+              </button>
+              <button mat-icon-button color="accent" (click)="completeOrder(order.id)"
+                      [disabled]="order.status !== 'PROCESSING'" matTooltip="Complete Order">
+                <mat-icon>check_circle</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="cancelOrder(order.id)"
+                      [disabled]="order.status !== 'PROCESSING'" matTooltip="Cancel Order">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+      <p *ngIf="orders.data.length === 0 && !isLoadingOrders">No recent orders.</p>
+      <mat-spinner *ngIf="isLoadingOrders"></mat-spinner>
+      <p class="error-message" *ngIf="errorMessageOrders">{{ errorMessageOrders }}</p>
+    </mat-card-content>
+  </mat-card>
+</div>

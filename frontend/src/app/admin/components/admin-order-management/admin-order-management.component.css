@@ -1,0 +1,23 @@
+/* superdupermart/frontend/src/app/admin/components/admin-order-management/admin-order-management.component.css */
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 800px;
+}
+
+mat-card {
+  margin: 20px;
+}
+
+mat-spinner {
+  margin: 20px auto;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}

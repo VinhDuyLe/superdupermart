@@ -1,0 +1,38 @@
+/* superdupermart/frontend/src/app/shared/components/order-detail/order-detail.component.css */
+.order-detail-card {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+table {
+  width: 100%;
+  min-width: 500px;
+}
+
+.order-total {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.order-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px; /* Space between buttons */
+  justify-content: flex-end; /* Align buttons to the right */
+}
+
+mat-spinner {
+  margin: 20px auto;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}

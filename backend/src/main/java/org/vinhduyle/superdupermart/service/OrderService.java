@@ -15,6 +15,8 @@ import org.vinhduyle.superdupermart.domain.Product;
 import org.vinhduyle.superdupermart.domain.User;
 import org.vinhduyle.superdupermart.dto.OrderItemRequest;
 import org.vinhduyle.superdupermart.exception.NotEnoughInventoryException;
+import org.vinhduyle.superdupermart.dto.PagedResponse; // Import PagedResponse
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -172,10 +174,27 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public List<Order> getAllOrdersPaged(int page, int size) {
+    // Modified getAllOrdersPaged to return PagedResponse
+    @Transactional(readOnly = true)
+    public PagedResponse<Order> getAllOrdersPaged(int page, int size) {
         List<Order> orders = orderDao.findOrdersPaged(page, size);
         orders.forEach(o -> o.getItems().size()); // Ensure items initialized
-        return orders;
+
+        long totalElements = orderDao.getTotalOrderCount();
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+
+        return new PagedResponse<>(
+                orders,
+                totalElements,
+                totalPages,
+                page, // <-- THIS 'page' PARAMETER SHOULD BE THE CORRECT PAGE INDEX RECEIVED
+                size
+        );
+    }
+
+    // New method to get total sold items count
+    @Transactional(readOnly = true)
+    public long getTotalSoldItemsCount() {
+        return orderDao.getTotalSoldItemCount();
     }
 }
