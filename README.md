@@ -126,3 +126,27 @@ Follow these steps to get the Super Duper Mart application up and running on you
 ## Project Structure
 
 This project is organized as a monorepo:
+
+superdupermart/
+├── backend/        # Spring Boot backend application
+│   ├── src/
+│   ├── pom.xml
+│   └── README.md   # Backend-specific documentation
+└── frontend/       # Angular frontend application
+├── src/
+├── angular.json
+├── package.json
+└── README.md   # Frontend-specific documentation
+
+
+## Backend API Documentation
+
+The backend exposes a RESTful API. You can find a Postman collection (if available) or detailed endpoint descriptions in the `backend/README.md`.
+
+## Contributing
+
+Please refer to the `backend/README.md` and `frontend/README.md` for specific development guidelines for each part of the project.
+
+## License
+
+[Specify your license here, e.g., MIT, Apache 2.0, etc.]
