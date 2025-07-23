@@ -1,0 +1,7 @@
+/* superdupermart/frontend/src/app/app.component.css */
+.spacer {
+  flex: 1 1 auto;
+}
+.main-content {
+  padding: var(--spacing-unit); /* Use CSS variable for consistency */
+}

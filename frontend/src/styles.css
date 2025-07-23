@@ -1,4 +1,107 @@
-/* You can add global styles to this file, and also import other style files */
+/* superdupermart/frontend/src/styles.css */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Global Font & Body Reset */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Poppins', sans-serif; /* Use the imported font */
+  font-size: 16px; /* Base font size */
+  line-height: 1.6;
+  color: #333; /* Darker text for readability */
+  background-color: #f8f9fa; /* Very light grey background for freshness */
+}
+
+/* CSS Variables for a Cohesive Palette */
+:root {
+  --primary-color: #007bff; /* Example: A strong blue */
+  --accent-color: #6f42c1;  /* Example: A deep purple */
+  --warn-color: #dc3545;    /* Standard red for warnings */
+  --text-dark: #333;
+  --text-light: #f8f9fa;
+  --background-light: #ffffff;
+  --background-body: #f8f9fa;
+  --border-color: #e0e0e0; /* Light border for clean lines */
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+  --border-radius: 8px; /* Consistent rounded corners */
+  --spacing-unit: 16px;
+}
+
+/* Apply colors to Angular Material's theme variables */
+/* Note: For full Material theming, you'd use a custom-theme.scss with Angular Material's theming mixins.
+   This is a quick way to ensure your defined variables are used by Material. */
+.mat-toolbar.mat-primary { background-color: var(--primary-color) !important; }
+.mat-raised-button.mat-primary { background-color: var(--primary-color) !important; color: var(--text-light) !important; }
+.mat-raised-button.mat-accent { background-color: var(--accent-color) !important; color: var(--text-light) !important; }
+.mat-raised-button.mat-warn { background-color: var(--warn-color) !important; color: var(--text-light) !important; }
+
+/* General Card Styling (used by Mat-Card) */
+mat-card {
+  background-color: var(--background-light);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: var(--spacing-unit); /* Add consistent margin between cards */
+  padding: calc(var(--spacing-unit) * 1.5) !important; /* More padding inside cards */
+}
+
+mat-card-title {
+  font-weight: 600 !important; /* Slightly bolder titles */
+  color: var(--text-dark) !important;
+  margin-bottom: var(--spacing-unit) !important; /* Space after title */
+}
+
+/* Basic Table Styling */
+.mat-elevation-z8 {
+  box-shadow: var(--box-shadow) !important;
+  border-radius: var(--border-radius) !important;
+  overflow: hidden; /* Ensures border-radius applies to table content */
+}
+
+table {
+  width: 100%;
+  border-collapse: separate; /* Required for border-radius on cells */
+  border-spacing: 0;
+}
+
+th.mat-header-cell {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  font-weight: 500;
+  padding: var(--spacing-unit) !important;
+  text-align: left;
+}
+
+td.mat-cell {
+  padding: var(--spacing-unit) !important;
+  border-bottom: 1px solid var(--border-color);
+}
+
+tr.mat-header-row {
+  height: auto !important;
+}
+
+tr.mat-row {
+  height: auto !important;
+  transition: background-color 0.2s ease-in-out;
+}
+
+tr.mat-row:hover {
+  background-color: #f0f0f0; /* Subtle hover effect for rows */
+}
+
+/* Error message consistent style */
+.error-message {
+  color: var(--warn-color);
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+
+/* Spinner centered */
+mat-spinner {
+  margin: 20px auto;
+  display: block;
+}
+
+/* Spacing for buttons in actions */
+.mat-icon-button {
+  margin: 0 4px;
+}

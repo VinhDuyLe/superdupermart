@@ -1,20 +1,69 @@
-/* superdupermart/frontend/src/app/auth/register/register.component.css */
-/* You can reuse the styles from login.component.css here, or define unique ones. */
-/* Example: */
+/* superdupermart/frontend/src/app/auth/login/login.component.css (and register.component.css) */
 .auth-card {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
+  max-width: 450px; /* Slightly wider for better spacing */
+  margin: 80px auto; /* More vertical space */
+  padding: calc(var(--spacing-unit) * 2) !important; /* More padding */
   text-align: center;
+  background-color: var(--background-light);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
 }
+
+mat-card-title {
+  font-size: 1.8em !important;
+  font-weight: 600 !important;
+  color: var(--primary-color) !important;
+  margin-bottom: calc(var(--spacing-unit) * 1.5) !important;
+}
+
 mat-form-field {
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: var(--spacing-unit);
 }
-button {
-  margin-top: 10px;
+
+mat-form-field.mat-form-field-appearance-fill .mat-form-field-wrapper {
+    background-color: transparent !important; /* Remove default Material fill background */
 }
+
+mat-form-field.mat-form-field-appearance-fill .mat-form-field-flex {
+  border: 1px solid var(--border-color); /* Add a subtle border */
+  border-radius: var(--border-radius);
+  padding: 0.5em 1em 0; /* Adjust padding for input */
+  background-color: var(--background-light); /* Ensure consistent background */
+}
+
+/* Style for the input itself within the form field */
+mat-form-field .mat-input-element {
+    font-size: 1.05em;
+    padding: 8px 0; /* Adjust internal input padding */
+}
+
+mat-form-field.mat-focused .mat-form-field-flex {
+    border-color: var(--accent-color); /* Highlight border on focus */
+    box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.2); /* Subtle focus ring */
+}
+
+mat-form-field .mat-form-field-subscript-wrapper {
+  padding: 0 !important; /* Remove default error message padding */
+  margin-top: 5px; /* Adjust spacing for error message */
+}
+
+button[type="submit"] {
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  padding: 12px 25px; /* Larger buttons */
+  font-size: 1.1em;
+  font-weight: 500;
+  border-radius: var(--border-radius); /* Consistent rounded corners */
+  box-shadow: var(--box-shadow);
+}
+
+.mat-card-actions {
+  justify-content: center; /* Center action buttons */
+  margin-top: var(--spacing-unit);
+}
+
 .error-message {
-  color: red;
-  margin-bottom: 10px;
+  color: var(--warn-color);
+  margin-top: 10px;
+  font-size: 0.9em;
 }

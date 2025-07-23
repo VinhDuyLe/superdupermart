@@ -1,11 +1,11 @@
 <div class="admin-home-container">
-  <mat-card class="welcome-card">
-    <mat-card-title>Admin Dashboard</mat-card-title>
-    <mat-card-content>
-      <p>Manage products, orders, and view key business statistics.</p>
-    </mat-card-content>
-  </mat-card>
-
+  <div class="hero-section"> <mat-card class="welcome-card">
+      <mat-card-title>Admin Dashboard</mat-card-title>
+      <mat-card-content>
+        <p>Manage products, orders, and view key business statistics.</p>
+      </mat-card-content>
+    </mat-card>
+  </div> 
   <div class="stats-grid">
     <mat-card class="stat-card">
       <mat-card-title>Top 3 Most Popular Products</mat-card-title>
@@ -57,7 +57,7 @@
       <mat-card-title>Total Items Sold</mat-card-title>
       <mat-card-content>
         <p *ngIf="totalSoldItems !== null; else loadingTotalSold">
-          <strong>{{ totalSoldItems }}</strong> items have been successfully sold.
+          <strong>{{ totalSoldItems }}</strong>
         </p>
         <ng-template #loadingTotalSold>
           <mat-spinner *ngIf="isLoadingTotalSold" diameter="20"></mat-spinner>

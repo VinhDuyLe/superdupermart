@@ -1,83 +1,134 @@
 /* superdupermart/frontend/src/app/user/components/user-home/user-home.component.css */
 .user-home-container {
-  padding: 20px;
+  padding: var(--spacing-unit);
 }
 
-.welcome-card {
-  margin-bottom: 20px;
+.hero-section {
+  background: linear-gradient(to right, var(--primary-color) 0%, #6f42c1 100%); /* Gradient background */
+  color: var(--text-light);
+  padding: calc(var(--spacing-unit) * 3) var(--spacing-unit);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
   text-align: center;
 }
 
+.hero-section .welcome-card {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: var(--text-dark);
+  padding: calc(var(--spacing-unit) * 2);
+  margin: 0 auto;
+  max-width: 600px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.hero-section .welcome-card mat-card-title {
+  color: var(--primary-color) !important;
+  font-size: 2.2em;
+  margin-bottom: var(--spacing-unit);
+}
+
+.hero-section .welcome-card mat-card-content p {
+  font-size: 1.1em;
+  line-height: 1.8;
+  color: #555;
+}
+
+.hero-section .welcome-card button {
+  margin-top: calc(var(--spacing-unit) * 1.5);
+  padding: 10px 30px;
+  font-size: 1.1em;
+  font-weight: 500;
+}
+
+
 .stats-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-unit);
+  margin-bottom: calc(var(--spacing-unit) * 2);
 }
 
-.stat-card {
-  flex: 1;
-  min-width: 300px;
-  max-width: 45%; /* Adjust as needed for responsiveness */
+/* Specific styling for the statistic cards */
+.stat-card mat-card-title {
+  font-size: 1.4em !important;
+  font-weight: 600 !important; /* Slightly bolder for clarity */
+  color: var(--primary-color) !important; /* Use primary color for card titles */
+  border-bottom: 1px solid var(--border-color); /* Subtle separator */
+  padding-bottom: calc(var(--spacing-unit) / 2); /* Space below separator */
+  margin-bottom: var(--spacing-unit) !important; /* Space after title area */
 }
 
+/* List items for products inside stat cards */
 mat-list {
   padding-top: 0;
   padding-bottom: 0;
 }
 
 mat-list-item {
-  height: auto !important; /* Allow content to dictate height */
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
+  height: auto !important;
+  padding: calc(var(--spacing-unit) / 2) 0; /* Reduced vertical padding */
+  border-bottom: 1px solid var(--border-color);
+  display: flex; /* Use flexbox for alignment */
+  align-items: center;
+  gap: 10px; /* Space between icon, title, price, actions */
 }
 
 mat-list-item:last-child {
   border-bottom: none;
 }
 
+/* Adjustments for mat-list-item content */
 mat-list-item .mat-list-item-content {
   display: flex;
   align-items: center;
   width: 100%;
+  padding: 0 !important; /* Remove default padding from content wrapper */
 }
 
-mat-list-item .mat-list-item-content > * {
-  flex-shrink: 0;
+mat-list-item .mat-icon {
+  color: var(--accent-color); /* Use accent color for icons */
+  font-size: 1.2em;
+  min-width: 24px; /* Ensure icon doesn't shrink */
+  height: 24px;
+  width: 24px;
 }
 
-mat-list-item .mat-list-item-content .mat-icon {
-  margin-right: 10px;
+mat-list-item [matListItemTitle] {
+  flex-grow: 1; /* Allows name to take available space */
+  font-weight: 500;
+  color: var(--text-dark);
+  font-size: 1.05em; /* Slightly larger product name */
+  white-space: nowrap; /* Prevent wrapping */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Add ellipsis */
 }
 
-mat-list-item .mat-list-item-content [matListItemTitle] {
-  flex-grow: 1;
-  font-weight: bold;
-}
-
-mat-list-item .mat-list-item-content [matListItemLine] {
+mat-list-item [matListItemLine] {
   margin-left: 10px;
-  color: #757575;
+  color: #777;
+  font-size: 0.95em;
+  font-weight: 400;
+  flex-shrink: 0; /* Prevent price from shrinking */
 }
 
-.error-message {
-  color: red;
-  text-align: center;
-  margin-top: 10px;
+mat-list-item button {
+  flex-shrink: 0; /* Prevent action button from shrinking */
 }
 
-mat-spinner {
-  margin: 10px auto;
-  display: block;
-}
+/* Existing error/spinner styles are fine */
+mat-spinner { margin: 10px auto; display: block; }
+.error-message { color: var(--warn-color); text-align: center; margin-top: 10px; }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .stats-section {
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: 1fr;
   }
-  .stat-card {
-    max-width: 100%;
+  .hero-section {
+     padding: calc(var(--spacing-unit) * 2) var(--spacing-unit);
+  }
+  .hero-section .welcome-card {
+    margin: 0 auto;
   }
 }
