@@ -1,17 +1,16 @@
-// superdupermart/backend/src/main/java/org/vinhduyle/superdupermart/config/CorsConfig.java
 package org.vinhduyle.superdupermart.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration // <-- Must be here
-public class CorsConfig implements WebMvcConfigurer { // <-- Must implement this
+@Configuration
+public class CorsConfig implements WebMvcConfigurer {
 
-    @Override // <-- Must override this method
+    @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:4200") // <-- EXACTLY this URL
+                .allowedOrigins("http://localhost:4200")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)

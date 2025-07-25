@@ -8,7 +8,7 @@ import { RegistrationRequest } from 'src/app/shared/models/user.model'; // Impor
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'] // Using the same CSS as login for now
+  styleUrls: ['./register.component.css'] 
 })
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.registerForm = this.fb.group({
       username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]], // Added email validator
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
@@ -37,11 +37,9 @@ export class RegisterComponent implements OnInit {
           console.log('Registration successful', response);
           // On successful registration, redirect to login page
           this.router.navigate(['/login']);
-          // Optionally, show a success message using MatSnackBar (will implement later)
         },
         error: err => {
           console.error('Registration failed', err);
-          // Backend error messages like "Username already exists" will be in err.error.error
           this.errorMessage = err.error?.error || 'Registration failed. Please try again.';
         }
       });

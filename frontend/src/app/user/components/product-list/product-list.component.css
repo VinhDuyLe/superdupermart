@@ -1,23 +1,21 @@
 /* superdupermart/frontend/src/app/user/components/product-list/product-list.component.css */
 mat-card {
-  margin: var(--spacing-unit); /* Consistent card margin */
-  padding: var(--spacing-unit) !important; /* Consistent card padding */
+  margin: var(--spacing-unit); 
+  padding: var(--spacing-unit) !important; 
 }
 
 .table-container {
-  overflow-x: auto; /* Essential for responsiveness on tables */
+  overflow-x: auto; 
   margin-top: var(--spacing-unit);
 }
 
 table {
   width: 100%;
-  border-collapse: collapse; /* Cleaner look without border spacing */
-  min-width: 700px; /* Ensure table doesn't collapse too much */
+  border-collapse: collapse; 
+  min-width: 700px; 
 }
 
-/* MatTable styling is largely global from styles.css */
 
-/* Specific button styling (if needed, otherwise rely on Material defaults) */
 td.mat-cell button {
   margin: 0 4px;
 }

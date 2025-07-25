@@ -18,7 +18,7 @@ mat-form-field {
 }
 
 mat-spinner {
-  margin-right: 8px; /* Space between spinner and text */
+  margin-right: 8px; 
 }
 
 .error-message {

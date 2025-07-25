@@ -1,7 +1,7 @@
 // src/app/admin/admin.module.ts
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // For admin forms
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminHomeComponent } from './components/admin-home/admin-home.component';
@@ -10,7 +10,6 @@ import { AddProductComponent } from './components/add-product/add-product.compon
 import { EditProductComponent } from './components/edit-product/edit-product.component';
 import { AdminOrderManagementComponent } from './components/admin-order-management/admin-order-management.component';
 
-// Angular Material Imports for Admin Module
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,9 +21,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { MatListModule } from '@angular/material/list'; // For lists in admin home
+import { MatListModule } from '@angular/material/list'; 
 
-// Import SharedModule to use shared components like ProductDetailComponent, OrderDetailComponent
 import { SharedModule } from '../shared/shared.module';
 
 
@@ -52,8 +50,8 @@ import { SharedModule } from '../shared/shared.module';
     MatTooltipModule,
     MatPaginatorModule,
     MatSortModule,
-    MatListModule, // Add MatListModule here
-    SharedModule // Import SharedModule
+    MatListModule, 
+    SharedModule 
   ]
 })
 export class AdminModule { }

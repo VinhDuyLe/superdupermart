@@ -13,7 +13,6 @@ import { ShoppingCartComponent } from '../shared/components/shopping-cart/shoppi
 
 
 const routes: Routes = [
-  // These paths are relative to the parent '/user' path
   { path: '', redirectTo: 'home', pathMatch: 'full' }, // Redirect /user to /user/home
   { path: 'home', component: UserHomeComponent },
   { path: 'products', component: ProductListComponent }, // /user/products
@@ -21,12 +20,12 @@ const routes: Routes = [
   { path: 'watchlist/products/all', component: WatchlistPageComponent }, // /user/watchlist/products/all
   { path: 'orders', component: UserOrdersPageComponent }, // /user/orders
   { path: 'orders/:id', component: OrderDetailComponent }, // /user/orders/:id
-  { path: 'cart', component: ShoppingCartComponent }, // <--- ADD THIS LINE
+  { path: 'cart', component: ShoppingCartComponent }, 
 
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)], // Use forChild for feature modules
+  imports: [RouterModule.forChild(routes)], 
   exports: [RouterModule]
 })
 export class UserRoutingModule { }

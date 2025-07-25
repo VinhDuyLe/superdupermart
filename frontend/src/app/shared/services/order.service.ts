@@ -5,8 +5,8 @@ import { Observable, tap } from 'rxjs';
 import { Order, OrderRequest } from '../models/order.model';
 import { ProductResponseDTO } from '../models/product.model';
 import { environment } from 'src/environments/environment';
-import { MatSnackBar } from '@angular/material/snack-bar'; // For notifications
-import { PagedResponse } from '../models/common.model'; // Import PagedResponse
+import { MatSnackBar } from '@angular/material/snack-bar'; 
+import { PagedResponse } from '../models/common.model'; 
 
 @Injectable({
   providedIn: 'root'
@@ -44,21 +44,19 @@ export class OrderService {
     return this.http.get<ProductResponseDTO[]>(`${environment.backendBaseUrl}/products/recent/${x}`);
   }
 
-  // Admin specific methods
-  // Modified getAllOrdersPaged to expect PagedResponse
+  // Admin 
   getAllOrdersPaged(page: number = 0, size: number = 5): Observable<PagedResponse<Order>> {
     return this.http.get<PagedResponse<Order>>(`${this.apiUrl}/admin?page=${page}&size=${size}`);
   }
 
   completeOrder(orderId: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${orderId}/complete`, {}).pipe(
-        tap(() => { // <--- CORRECTED: Use tap operator
+        tap(() => { 
             this.snackBar.open(`Order ${orderId} completed successfully!`, 'Dismiss', { duration: 3000 });
         })
     );
   }
 
-  // New method for total sold items (Admin only)
   getTotalSoldItemsCount(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/admin/total-sold-items`);
   }

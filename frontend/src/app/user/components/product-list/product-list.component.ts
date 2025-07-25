@@ -58,7 +58,6 @@ export class ProductListComponent implements OnInit {
   addToWatchlist(productId: number): void {
     this.watchlistService.addProduct(productId).subscribe({
       next: () => {
-        // Notification handled by service now
       },
       error: (err) => {
         console.error('Failed to add to watchlist:', err);

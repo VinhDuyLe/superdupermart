@@ -22,9 +22,6 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
-        // No need for BindingResult parameter or manual check here.
-        // If validation fails, Spring will throw MethodArgumentNotValidException,
-        // and your GlobalExceptionHandler will catch it.
         User user = userService.registerUser(request);
         return ResponseEntity.ok(UserResponse.builder()
                 .id(user.getId())
@@ -36,9 +33,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginRequest request) {
-        // No need for BindingResult parameter or manual check here.
-        // If validation fails, Spring will throw MethodArgumentNotValidException,
-        // and your GlobalExceptionHandler will catch it.
         String token = userService.loginAndGetToken(request);
         Map<String, String> response = new HashMap<>();
         response.put("token", token);

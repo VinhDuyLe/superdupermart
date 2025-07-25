@@ -75,7 +75,6 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error('Failed to place order:', err);
         this.errorMessage = err.error?.error || 'Failed to place order. Please try again.';
-        // Fix 3 (Best for error messages - provides a generic fallback if null):
         this.snackBar.open(this.errorMessage || 'An unexpected error occurred.', 'Dismiss', { duration: 5000 });
  
         this.isPlacingOrder = false;

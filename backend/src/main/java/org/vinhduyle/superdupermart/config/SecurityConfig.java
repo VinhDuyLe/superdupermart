@@ -25,41 +25,33 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                // IMPORTANT: Ensure CORS is handled by Spring Security before authorization
-                // This allows the CorsConfig to take effect for preflight requests
-                .cors() // <--- ADD THIS LINE TO ENABLE CORS INTEGRATION WITH SPRING SECURITY
+                .cors() //ENABLE CORS
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                // Permit preflight OPTIONS requests for all paths.
-                // Browsers send OPTIONS before actual cross-origin requests (POST, PUT, PATCH, DELETE, or requests with custom headers like Authorization).
-                // If this is blocked, the actual request won't even be sent.
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() // <--- ADD THIS LINE
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // Public endpoints (no authentication required)
+                // Public endpoints (no auth required)
                 .antMatchers("/signup", "/login").permitAll()
 
-                // Authenticated endpoints (require a valid JWT token)
-                // This is where /products/all and /products/{id} should be
-                .antMatchers("/products/all", "/products/{id}").authenticated() // <-- NOW THIS IS CORRECTLY AUTHENTICATED
+                // require a valid JWT token
+                .antMatchers("/products/all", "/products/{id}").authenticated()
                 .antMatchers("/products/frequent/{id}", "/products/recent/{id}").authenticated()
                 .antMatchers("/orders/all").authenticated()
                 .antMatchers("/orders/{id}").authenticated()
-                .antMatchers("/orders", "/orders/**").authenticated() // Ensure all /orders routes are authenticated unless specified
+                .antMatchers("/orders", "/orders/**").authenticated()
                 .antMatchers("PATCH", "/orders/*/cancel").authenticated()
 
 
-                // Admin-only endpoints (require ADMIN role)
+                // Admin-only endpoints
                 .antMatchers("/orders/admin", "/products/popular/**", "/products/profit/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/products/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/orders/*/complete").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/orders/admin/total-sold-items").hasRole("ADMIN") // <--- ADD THIS LINE
+                .antMatchers(HttpMethod.GET, "/orders/admin/total-sold-items").hasRole("ADMIN")
 
-
-
-                // Any other request must also be authenticated by default
+                // other by default
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

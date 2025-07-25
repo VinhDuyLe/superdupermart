@@ -24,7 +24,6 @@ public class JWTUtil {
     @PostConstruct
     public void init() {
         System.out.println("JWT Secret: " + jwtSecret);
-//        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
         byte[] decodedKey = Base64.getDecoder().decode(jwtSecret);
         this.key = Keys.hmacShaKeyFor(decodedKey);
     }

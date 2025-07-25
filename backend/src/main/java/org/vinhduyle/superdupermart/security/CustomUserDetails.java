@@ -1,8 +1,7 @@
-// src/main/java/org/vinhduyle/superdupermart/security/CustomUserDetails.java
 package org.vinhduyle.superdupermart.security;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User; // Important: Import Spring Security's User
+import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 public class CustomUserDetails extends User {

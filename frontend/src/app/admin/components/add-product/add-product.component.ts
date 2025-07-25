@@ -42,12 +42,11 @@ export class AddProductComponent implements OnInit {
         next: (product) => {
           this.snackBar.open(`Product '${product.name}' added successfully!`, 'Dismiss', { duration: 3000 });
           this.isSubmitting = false;
-          this.router.navigate(['/admin/products']); // Navigate back to product management
+          this.router.navigate(['/admin/products']); 
         },
         error: (err) => {
           console.error('Failed to add product:', err);
           this.errorMessage = err.error?.error || 'Failed to add product. Please try again.';
-// Fix 3 (Best for error messages - provides a generic fallback if null):
           this.snackBar.open(this.errorMessage || 'An unexpected error occurred.', 'Dismiss', { duration: 5000 });          
           this.isSubmitting = false;
         }

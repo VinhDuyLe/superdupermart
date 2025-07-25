@@ -1,4 +1,3 @@
-// src/main/java/org/vinhduyle/superdupermart/service/OrderService.java
 package org.vinhduyle.superdupermart.service;
 
 import lombok.RequiredArgsConstructor;
@@ -87,11 +86,9 @@ public class OrderService {
             throw new IllegalArgumentException("Requesting user not found.");
         }
 
-        // Use .getRole().name() to compare with String literal
         boolean isAdmin = requestingUser.getRole().name().equals("ADMIN");
 
         if (!isAdmin && !order.getUser().getId().equals(requestingUserId)) {
-            // Throw Spring Security's AccessDeniedException
             throw new AccessDeniedException("User not authorized to cancel this order.");
         }
 
@@ -174,7 +171,6 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    // Modified getAllOrdersPaged to return PagedResponse
     @Transactional(readOnly = true)
     public PagedResponse<Order> getAllOrdersPaged(int page, int size) {
         List<Order> orders = orderDao.findOrdersPaged(page, size);
@@ -187,12 +183,11 @@ public class OrderService {
                 orders,
                 totalElements,
                 totalPages,
-                page, // <-- THIS 'page' PARAMETER SHOULD BE THE CORRECT PAGE INDEX RECEIVED
+                page,
                 size
         );
     }
 
-    // New method to get total sold items count
     @Transactional(readOnly = true)
     public long getTotalSoldItemsCount() {
         return orderDao.getTotalSoldItemCount();

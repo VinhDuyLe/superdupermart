@@ -54,12 +54,11 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  getUserRole(): UserRole | null { // Return UserRole enum
+  getUserRole(): UserRole | null { 
     const token = this.getToken();
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        // Ensure payload.role matches your UserRole enum values ('USER', 'ADMIN')
         return payload.role as UserRole;
       } catch (e) {
         console.error('Error decoding JWT token:', e);

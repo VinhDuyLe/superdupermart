@@ -23,7 +23,6 @@ public class WatchlistController {
     private final WatchlistService watchlistService;
     private final ProductService productService;
 
-    // Removed HttpServletRequest from signature
     @GetMapping("/products/all")
     public ResponseEntity<List<ProductResponseDTO>> getAllWatchlistProducts() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -37,7 +36,6 @@ public class WatchlistController {
         return ResponseEntity.ok(dtos);
     }
 
-    // Removed HttpServletRequest from signature
     @PostMapping("/product/{productId}")
     public ResponseEntity<Void> addProduct(@PathVariable Long productId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -48,7 +46,6 @@ public class WatchlistController {
         return ResponseEntity.ok().build();
     }
 
-    // Removed HttpServletRequest from signature
     @DeleteMapping("/product/{productId}")
     public ResponseEntity<Void> removeProduct(@PathVariable Long productId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

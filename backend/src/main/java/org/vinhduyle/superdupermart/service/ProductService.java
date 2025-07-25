@@ -1,6 +1,5 @@
 package org.vinhduyle.superdupermart.service;
 
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -11,7 +10,6 @@ import org.vinhduyle.superdupermart.domain.Product;
 import org.vinhduyle.superdupermart.dto.ProductResponseDTO;
 
 import java.util.List;
-import java.util.stream.Collectors; // Added import
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +60,6 @@ public class ProductService {
         return product;
     }
 
-    // This version is for general users - hides wholesale price
     public ProductResponseDTO toProductResponseDTO(Product product) {
         return ProductResponseDTO.builder()
                 .id(product.getId())
@@ -70,11 +67,10 @@ public class ProductService {
                 .description(product.getDescription())
                 .retailPrice(product.getRetailPrice())
                 .quantity(null)
-                .wholesalePrice(null) // Explicitly set to null for regular users
+                .wholesalePrice(null)
                 .build();
     }
 
-    // This version is for ADMINs - includes wholesale price
     public ProductResponseDTO toProductResponseDTOForAdmin(Product product) {
         return ProductResponseDTO.builder()
                 .id(product.getId())
@@ -82,7 +78,7 @@ public class ProductService {
                 .description(product.getDescription())
                 .retailPrice(product.getRetailPrice())
                 .quantity(product.getQuantity())
-                .wholesalePrice(product.getWholesalePrice()) // Include wholesale price for admin
+                .wholesalePrice(product.getWholesalePrice())
                 .build();
     }
 }

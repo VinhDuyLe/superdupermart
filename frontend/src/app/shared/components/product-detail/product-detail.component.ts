@@ -63,7 +63,6 @@ export class ProductDetailComponent implements OnInit {
   }
 
   backToList(): void {
-    // Navigate back to products list, or admin product management if admin
     if (this.isAdmin()) {
       this.router.navigate(['/admin/products']);
     } else {

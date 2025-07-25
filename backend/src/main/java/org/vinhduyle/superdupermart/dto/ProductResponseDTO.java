@@ -17,6 +17,5 @@ public class ProductResponseDTO {
     private String description;
     private BigDecimal retailPrice;
     private Integer quantity;
-    // Add wholesalePrice
-    private BigDecimal wholesalePrice; // New field for admins
+    private BigDecimal wholesalePrice;
 }

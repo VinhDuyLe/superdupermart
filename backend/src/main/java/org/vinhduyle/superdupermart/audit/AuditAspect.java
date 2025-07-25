@@ -1,4 +1,3 @@
-// src/main/java/org/vinhduyle/superdupermart/audit/AuditAspect.java
 package org.vinhduyle.superdupermart.audit;
 
 import org.aspectj.lang.JoinPoint;
@@ -73,14 +72,14 @@ public class AuditAspect {
     public Object auditOrderCompletion(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
         String username = getCurrentUsername();
-        Long orderId = (Long) proceedingJoinPoint.getArgs()[0]; // Assuming orderId is the first argument
+        Long orderId = (Long) proceedingJoinPoint.getArgs()[0];
 
         logger.info("[AUDIT-AROUND] User '{}' starting to complete Order ID: {}. Method: {}",
                 username, orderId, proceedingJoinPoint.getSignature().toShortString());
 
         Object result = null;
         try {
-            result = proceedingJoinPoint.proceed(); // Execute the actual method
+            result = proceedingJoinPoint.proceed();
             long endTime = System.currentTimeMillis();
             logger.info("[AUDIT-AROUND] User '{}' successfully completed Order ID: {}. Execution time: {}ms",
                     username, orderId, (endTime - startTime));
@@ -88,16 +87,16 @@ public class AuditAspect {
             long endTime = System.currentTimeMillis();
             logger.error("[AUDIT-AROUND] User '{}' failed to complete Order ID: {}. Exception: {}. Execution time: {}ms",
                     username, orderId, ex.getMessage(), (endTime - startTime));
-            throw ex; // Re-throw the exception so it continues to be handled
+            throw ex;
         }
         return result;
     }
 
-    // @After Advice: Log order cancellation (regardless of success or failure)
+    // @After Advice: Log order cancellation
     @After("orderCancellationOperation()")
     public void logOrderCancellation(JoinPoint joinPoint) {
         String username = getCurrentUsername();
-        Long orderId = (Long) joinPoint.getArgs()[0]; // Assuming orderId is the first argument
+        Long orderId = (Long) joinPoint.getArgs()[0];
         logger.info("[AUDIT-AFTER] User '{}' attempted/completed order cancellation for Order ID: {}",
                 username, orderId);
     }
@@ -110,6 +109,6 @@ public class AuditAspect {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             return userDetails.getUsername();
         }
-        return "ANONYMOUS"; // Or throw an exception if authentication is mandatory
+        return "ANONYMOUS";
     }
 }

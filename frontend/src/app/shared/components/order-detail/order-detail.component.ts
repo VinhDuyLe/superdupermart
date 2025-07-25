@@ -60,9 +60,9 @@ export class OrderDetailComponent implements OnInit {
   }
 
   viewProductDetail(productId: number): void {
-    if (this.isAdmin()) { // If admin is viewing order, go to admin product detail
+    if (this.isAdmin()) { 
       this.router.navigate(['/admin/products', productId]);
-    } else { // Otherwise, go to user product detail
+    } else { 
       this.router.navigate(['/user/products', productId]);
     }
   }
@@ -98,8 +98,7 @@ export class OrderDetailComponent implements OnInit {
     if (confirm('Are you sure you want to complete this order?')) {
       this.orderService.completeOrder(this.order.id).subscribe({
         next: () => {
-          this.loadOrderDetail(this.order!.id); // Refresh order status
-          // Notification handled by service
+          this.loadOrderDetail(this.order!.id); 
         },
         error: (err) => {
           console.error('Failed to complete order:', err);

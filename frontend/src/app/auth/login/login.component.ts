@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.errorMessage = null; // Clear previous errors
+    this.errorMessage = null; 
     if (this.loginForm.valid) {
       const credentials: LoginRequest = this.loginForm.value;
       this.authService.login(credentials).subscribe({

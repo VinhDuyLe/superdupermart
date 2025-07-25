@@ -38,11 +38,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleNotEnoughInventory(NotEnoughInventoryException ex) {
         Map<String, String> body = new HashMap<>();
         body.put("error", ex.getMessage());
-        // 409 Conflict could be used to indicate a conflict with current state of resource
-        // 422 Unprocessable Entity for semantic errors
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(body); // Or HttpStatus.UNPROCESSABLE_ENTITY
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
-    // Example addition to GlobalExceptionHandler
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -53,7 +50,6 @@ public class GlobalExceptionHandler {
                         fieldError -> fieldError.getField(),
                         fieldError -> fieldError.getDefaultMessage() != null ? fieldError.getDefaultMessage() : "Invalid value"
                 ));
-        // You can return a 400 Bad Request for validation errors
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 

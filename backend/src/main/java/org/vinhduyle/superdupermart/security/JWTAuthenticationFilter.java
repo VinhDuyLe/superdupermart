@@ -44,8 +44,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                // REMOVED: request.setAttribute("userId", userId);
-                // The userId is now directly available in CustomUserDetails
+
             }
         }
 

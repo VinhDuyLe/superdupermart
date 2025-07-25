@@ -21,9 +21,8 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final ProductService productService;
-    private final OrderService orderService; // Keep if other methods use it
+    private final OrderService orderService;
 
-    // Helper method to check if the current user is an ADMIN
     private boolean isAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
@@ -40,14 +39,14 @@ public class ProductController {
         List<ProductResponseDTO> dtos;
 
         if (isAdmin()) {
-            products = productService.getAllProducts(); // Get all products regardless of stock for admin view
+            products = productService.getAllProducts();
             dtos = products.stream()
-                    .map(productService::toProductResponseDTOForAdmin) // Use admin DTO conversion
+                    .map(productService::toProductResponseDTOForAdmin)
                     .collect(Collectors.toList());
         } else {
-            products = productService.getAllInStockProducts(); // Only in-stock for regular users
+            products = productService.getAllInStockProducts();
             dtos = products.stream()
-                    .map(productService::toProductResponseDTO) // Use regular DTO conversion
+                    .map(productService::toProductResponseDTO)
                     .collect(Collectors.toList());
         }
         return ResponseEntity.ok(dtos);
@@ -68,7 +67,6 @@ public class ProductController {
         }
     }
 
-    // Existing methods (no change, but ensure userId retrieval is consistent with CustomUserDetails)
     @GetMapping("/frequent/{x}")
     public ResponseEntity<List<ProductResponseDTO>> getMostFrequentlyPurchased(@PathVariable int x) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -77,7 +75,7 @@ public class ProductController {
 
         List<Product> products = orderService.getMostFrequentlyPurchasedProducts(userId, x);
         List<ProductResponseDTO> dtos = products.stream()
-                .map(productService::toProductResponseDTO) // Regular DTO conversion
+                .map(productService::toProductResponseDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
@@ -96,7 +94,6 @@ public class ProductController {
     }
 
     // ADMIN endpoints (no change, as they already deal with Product objects directly)
-
     @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
         productService.createProduct(product);

@@ -1,5 +1,5 @@
 // superdupermart/frontend/src/app/core/interceptors/auth.interceptor.ts
-import { Injectable } from '@angular/core'; // <-- Import Injectable
+import { Injectable } from '@angular/core'; 
 import {
   HttpRequest,
   HttpHandler,
@@ -9,7 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-@Injectable() // <--- ADD THIS DECORATOR
+@Injectable() 
 export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private authService: AuthService) {}

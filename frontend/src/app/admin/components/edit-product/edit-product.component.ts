@@ -52,7 +52,7 @@ export class EditProductComponent implements OnInit {
     this.errorMessage = null;
     this.productService.getProductDetail(id).subscribe({
       next: (product: ProductResponseDTO) => {
-        this.productForm.patchValue(product); // Populate form with existing data
+        this.productForm.patchValue(product); 
         this.isLoading = false;
       },
       error: (err) => {
@@ -72,12 +72,11 @@ export class EditProductComponent implements OnInit {
         next: (product) => {
           this.snackBar.open(`Product '${product.name}' updated successfully!`, 'Dismiss', { duration: 3000 });
           this.isSubmitting = false;
-          this.router.navigate(['/admin/products']); // Navigate back to product management
+          this.router.navigate(['/admin/products']); 
         },
         error: (err) => {
           console.error('Failed to update product:', err);
           this.errorMessage = err.error?.error || 'Failed to update product. Please try again.';
-        // Fix 3 (Best for error messages - provides a generic fallback if null):
           this.snackBar.open(this.errorMessage || 'Failed to update product.', 'Dismiss', { duration: 5000 });
            this.isSubmitting = false;
         }

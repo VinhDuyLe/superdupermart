@@ -8,15 +8,14 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PagedResponse } from '../../../shared/models/common.model';
-import { Subscription, merge } from 'rxjs'; // Import Subscription and merge
-import { startWith, tap, switchMap } from 'rxjs/operators'; // Import operators
-
+import { Subscription, merge } from 'rxjs'; 
+import { startWith, tap, switchMap } from 'rxjs/operators'; 
 @Component({
   selector: 'app-admin-order-management',
   templateUrl: './admin-order-management.component.html',
   styleUrls: ['./admin-order-management.component.css']
 })
-export class AdminOrderManagementComponent implements OnInit, AfterViewInit, OnDestroy { // Implement OnDestroy
+export class AdminOrderManagementComponent implements OnInit, AfterViewInit, OnDestroy { 
   displayedColumns: string[] = ['id', 'customer', 'status', 'createdAt', 'actions'];
   orders: MatTableDataSource<Order> = new MatTableDataSource();
   isLoading = true;
@@ -24,13 +23,11 @@ export class AdminOrderManagementComponent implements OnInit, AfterViewInit, OnD
 
   totalOrders = 0;
   pageSize = 5;
-  // pageSize is now primarily read from MatPaginator's state
-  // currentPage is not needed as a component property, MatPaginator.pageIndex will manage it
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  private dataSubscription: Subscription | null = null; // To manage subscription lifecycle
+  private dataSubscription: Subscription | null = null; 
 
   constructor(
     private orderService: OrderService,
@@ -39,54 +36,34 @@ export class AdminOrderManagementComponent implements OnInit, AfterViewInit, OnD
   ) { }
 
   ngOnInit(): void {
-    // Initial setup handled in ngAfterViewInit
   }
 
   ngAfterViewInit(): void {
     // Connect dataSource to sort
     this.orders.sort = this.sort;
 
-    // Combine sortChanges and paginator page events (including initial load)
-    // This is the most robust way to handle external data sources with MatPaginator & MatSort
     this.dataSubscription = merge(this.sort.sortChange, this.paginator.page)
       .pipe(
-        startWith({}), // Emit an empty value to trigger initial load
-        switchMap(() => { // switchMap unsubscribes from previous observable and subscribes to new one
+        startWith({}), 
+        switchMap(() => { 
           this.isLoading = true;
           this.errorMessage = null;
 
-          // Make the API call with the current state of paginator and sort
           return this.orderService.getAllOrdersPaged(
             this.paginator.pageIndex,
             this.paginator.pageSize
-            // Add sorting parameters if your backend supports it and you want sort to trigger reload
-            // this.sort.active,
-            // this.sort.direction
+
           );
         }),
-        tap((pagedResponse: PagedResponse<Order>) => { // Use tap to process the response
+        tap((pagedResponse: PagedResponse<Order>) => { 
           this.orders.data = pagedResponse.content;
           this.totalOrders = pagedResponse.totalElements;
 
-          // MatPaginator automatically updates its pageIndex based on the event it emits.
-          // No need to explicitly set this.paginator.pageIndex here unless there's an external reason.
-          // However, ensure the backend's pagedResponse.currentPage is CORRECT.
-          // If backend returns 0 for all pages, the bug is backend-side.
-          // Assuming backend sends correct pagedResponse.currentPage, MatPaginator will sync.
-
           this.isLoading = false;
         }),
-        // Add catchError for error handling directly in the pipe, or handle in component's subscribe
-        // catchError(error => {
-        //   console.error('Failed to load orders:', error);
-        //   this.errorMessage = error.error?.error || 'Failed to load orders.';
-        //   this.isLoading = false;
-        //   this.snackBar.open(this.errorMessage, 'Dismiss', { duration: 5000 });
-        //   return of([]); // Return an empty observable to prevent stream from breaking
-        // })
       )
-      .subscribe({ // Subscribe to finally trigger the stream
-        error: (err) => { // Centralized error handling for the stream
+      .subscribe({ 
+        error: (err) => { 
             console.error('Failed to load orders (stream error):', err);
             this.errorMessage = err.error?.error || 'Failed to load orders.';
             this.isLoading = false;
@@ -95,24 +72,18 @@ export class AdminOrderManagementComponent implements OnInit, AfterViewInit, OnD
       });
   }
 
-  ngOnDestroy(): void { // Clean up subscription to prevent memory leaks
+  ngOnDestroy(): void { 
     if (this.dataSubscription) {
       this.dataSubscription.unsubscribe();
     }
   }
 
-  // loadOrders method is now fully absorbed into the ngAfterViewInit stream.
-  // We remove it from here unless other methods *must* call it directly and bypass the stream.
-  // However, for completeOrder/cancelOrder, it's better to reload the *current* page by re-triggering the stream.
-  // We can create a refreshCurrentPage() method for that.
 
   refreshCurrentPage(): void {
-    // Trigger a refresh of the current page data
-    // This effectively re-emits a page event for the current paginator state
     this.paginator.page.emit({
       pageIndex: this.paginator.pageIndex,
       pageSize: this.paginator.pageSize,
-      length: this.totalOrders // Or this.paginator.length
+      length: this.totalOrders 
     });
   }
 
@@ -141,7 +112,7 @@ export class AdminOrderManagementComponent implements OnInit, AfterViewInit, OnD
       this.orderService.cancelOrder(id).subscribe({
         next: () => {
           this.snackBar.open(`Order ${id} cancelled successfully!`, 'Dismiss', { duration: 3000 });
-          this.refreshCurrentPage(); // Refresh the current page's data
+          this.refreshCurrentPage(); 
         },
         error: (err) => {
           console.error('Failed to cancel order:', err);
